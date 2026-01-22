@@ -292,7 +292,7 @@ export default function QuestionPalette() {
         <span className={`${isWarning ? "text-red-600 font-bold animate-pulse" : ""}`}>
           {timeLeft}
         </span>
-        sec
+          <span> sec</span>
       </div>
 
       <div className="w-full bg-white p-4  shadow  border">

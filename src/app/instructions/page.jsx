@@ -98,10 +98,10 @@ function InstructionsPage() {
               </thead>
               <tbody className="text-gray-700">
                 {[
-                  ["Aptitude", 20, 20, "20 mins"],
-                  ["Reasoning", 20, 20, "20 mins"],
-                  ["Communication", 20, 20, "20 mins"],
-                  ["Total", 60, 60, "60 mins"],
+                  ["Aptitude", 20, 20, "10 mins"],
+                  ["Reasoning", 20, 20, "10 mins"],
+                  ["Communication", 20, 20, "10 mins"],
+                  ["Total", 60, 60, "30 mins"],
                 ].map(([name, q, m, t], i) => (
                   <tr key={i} className="border-t">
                     <td className="px-4 py-3 font-medium">{name}</td>
@@ -123,8 +123,10 @@ function InstructionsPage() {
               </h3>
               <ul className="list-disc pl-6 space-y-1 text-gray-700">
                 <li>Ensure a stable internet connection</li>
-                <li>Each question carries <b>1 mark</b></li>
-                <li>Once submitted, sections cannot be revisited</li>
+                {/* <li>Each question carries <b>1 mark</b></li> */}
+                <li>Each section has <b>20 questions</b></li>
+                <li>Once timer is completed for question, You can't visit previous question</li>
+                {/* <li>Once submitted, sections cannot be revisited</li> */}
                 <li>Timer starts automatically</li>
               </ul>
             </div>
@@ -134,9 +136,9 @@ function InstructionsPage() {
                 <AlertTriangle size={18} /> Restrictions
               </h3>
               <ul className="list-disc pl-6 space-y-1 text-gray-700">
-                <li>Do not refresh or press <b>Back</b></li>
+                <li>Do not refresh or press, esc, back page</li>
                 <li>Tab switching is monitored</li>
-                <li>No calculators or mobile phones</li>
+                <li>Calculators or Mobile are not allowed</li>
                 <li>Auto-submit on time expiry</li>
               </ul>
             </div>

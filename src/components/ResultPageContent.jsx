@@ -84,7 +84,7 @@ export default function ResultPageContent() {
           <div className="space-y-3 mb-8">
             <h3 className="font-semibold text-lg">
               Hi,<span className="font-normal text-blue-900 text-2xl font-bold "> <b>{result.studentName}</b></span>
-              <p> Your Is Test Successfully Completed <br />
+              <p> Your test is successfully completed <br />
                 <h2 className="text-green-900 text-2xl font-bold mt-6">Thank You</h2>
               </p>
             </h3>
