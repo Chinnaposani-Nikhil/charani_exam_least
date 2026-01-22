@@ -125,7 +125,7 @@ function InstructionsPage() {
                 <li>Ensure a stable internet connection</li>
                 {/* <li>Each question carries <b>1 mark</b></li> */}
                 <li>Each section has <b>20 questions</b></li>
-                <li>Once timer is completed for question, You can't visit previous question</li>
+                <li>Once timer is completed for question,<br /> you can't visit previous question</li>
                 {/* <li>Once submitted, sections cannot be revisited</li> */}
                 <li>Timer starts automatically</li>
               </ul>
@@ -138,8 +138,8 @@ function InstructionsPage() {
               <ul className="list-disc pl-6 space-y-1 text-gray-700">
                 <li>Do not refresh or press, esc, back page</li>
                 <li>Tab switching is monitored</li>
-                <li>Calculators or Mobile are not allowed</li>
-                <li>Auto-submit on time expiry</li>
+                <li>Mobiles & Calculators are not allowed</li>
+                <li>Auto-submitted after 30 min</li>
               </ul>
             </div>
           </div>
@@ -153,8 +153,7 @@ function InstructionsPage() {
               onChange={(e) => setAccepted(e.target.checked)}
             />
             <p className="text-sm text-gray-700">
-              I have read and understood all the section-wise weightage and exam
-              rules. I am ready to begin my assignment.
+              I have read all the exam instructions, I am ready to start the Test.
             </p>
           </div>
 
@@ -172,9 +171,14 @@ function InstructionsPage() {
         </div>
       </div>
       <div className="flex p-2 gap-2 mt-5 text-big  justify-center">
-        <span>&copy;</span>
-        Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved.
+        {/* <span>&copy;</span>
+        Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved. */}
+
       </div>
+      {/* Footer at bottom */}
+      <footer className="mt-auto py-4 bg-gray-800 text-white text-center text-sm">
+        © Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved.
+      </footer>
     </div>
   );
 }
