@@ -253,6 +253,7 @@ export default function ExamPage() {
                                     <select name="branch" onChange={formik.handleChange} value={formik.values.branch} className="p-2 border border-gray-300 rounded-lg outline-none">
                                         <option>select Branch</option>
                                         <option value="aiml">AI/ML</option><option value="cse">CSE</option><option value="civil">CIVIL</option><option value="ece">ECE</option><option value="mech">Mech</option><option value="eee">EEE</option><option value="it">IT</option>
+                                        <option value="iot">IOT</option> <option value="it">Data Science </option>
                                     </select>
                                     {formik.touched.branch && formik.errors.branch && <div className='text-red-600 text-xs'>{formik.errors.branch}</div>}
                                 </div>
@@ -271,7 +272,7 @@ export default function ExamPage() {
                                 {/* Backlogs */}
                                 <div className="flex flex-col gap-1">
                                     <label className="text-sm font-bold text-blue-900 flex items-center gap-2"><History className="w-4 h-4" /> Backlogs <span className='text-red-600'>*</span></label>
-                                    <input id="backLogs" name="backLogs" type="number" onChange={formik.handleChange} value={formik.values.backLogs}
+                                    <input id="backLogs" min={0} max={10} name="backLogs" type="number" onChange={formik.handleChange} value={formik.values.backLogs}
                                         className="p-2 border border-gray-300 rounded-lg focus:border-blue-900 outline-none" />
                                     {formik.touched.backLogs && formik.errors.backLogs && <div className='text-red-600 text-xs'>{formik.errors.backLogs}</div>}
                                 </div>

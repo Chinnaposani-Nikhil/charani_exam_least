@@ -82,9 +82,11 @@ export default function ResultPageContent() {
           <h1 className="text-3xl font-bold mb-8 text-gray-800">Exam Result</h1>
 
           <div className="space-y-3 mb-8">
-            <p className="font-semibold text-lg">
-              Name: <span className="font-normal">{result.studentName}</span>
-            </p>
+            <h3 className="font-semibold text-lg">
+               Hi,<span className="font-normal bold ">{result.studentName}</span>
+              <p>Congratulations Your Test Successfully Completed </p>
+              </h3>
+            {/* </p>
             <p className="font-semibold text-lg">
               Email: <span className="font-normal">{result.studentEmail}</span>
             </p>
@@ -108,8 +110,8 @@ export default function ResultPageContent() {
             <p className="text-2xl font-bold text-red-600">
               Wrong Answers: {result.totalQuestions - result.correctAnswers}
             </p>
+          </div> */}
           </div>
-
           <button
             onClick={handleBack}
             className="mt-10 flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-medium mx-auto transition-colors"
