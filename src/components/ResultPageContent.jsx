@@ -83,9 +83,11 @@ export default function ResultPageContent() {
 
           <div className="space-y-3 mb-8">
             <h3 className="font-semibold text-lg">
-               Hi,<span className="font-normal bold ">{result.studentName}</span>
-              <p>Congratulations Your Test Successfully Completed </p>
-              </h3>
+              Hi,<span className="font-normal text-blue-900 text-2xl font-bold "> <b>{result.studentName}</b></span>
+              <p> Your test is successfully completed <br />
+                <h2 className="text-green-900 text-2xl font-bold mt-6">Thank You</h2>
+              </p>
+            </h3>
             {/* </p>
             <p className="font-semibold text-lg">
               Email: <span className="font-normal">{result.studentEmail}</span>
@@ -114,7 +116,7 @@ export default function ResultPageContent() {
           </div>
           <button
             onClick={handleBack}
-            className="mt-10 flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-medium mx-auto transition-colors"
+            className="mt-8 flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-medium mx-auto transition-colors"
           >
             <ArrowLeft size={20} />
             Go Back
