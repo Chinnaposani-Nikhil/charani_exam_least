@@ -6,7 +6,7 @@ import React, { useRef } from "react";
 const ExamContext = createContext(null);
 
 export function ExamProvider({ children }) {
-  const [response,setResponse]=useState();
+  const [response, setResponse] = useState();
   const [section, setSection] = useState("Aptitude");
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +18,7 @@ export function ExamProvider({ children }) {
   });
 
   // ⏱ timer (persist)
-  const [time, setTime] = useState(60*15); // default 1 hour
+  const [time, setTime] = useState(60 * 19); // default 1 hour
 
   // 🔹 Load persisted time only on client
   useEffect(() => {
@@ -27,12 +27,12 @@ export function ExamProvider({ children }) {
   }, []);
 
 
-    useEffect(() => {
+  useEffect(() => {
     const savedSection = localStorage.getItem("exam-section");
     if (savedSection) setSection(savedSection);
   }, []);
 
-    // persist section
+  // persist section
   useEffect(() => {
     localStorage.setItem("exam-section", section);
   }, [section]);
@@ -47,124 +47,124 @@ export function ExamProvider({ children }) {
     localStorage.setItem("exam-answers", JSON.stringify(answers));
   }, [answers]);
 
-  
+
   // fetch questions on section change
-//   useEffect(() => {
-//     fetch(`/api/${section.toLowerCase()}`)
-//       .then(res => res.json())
-//       .then(data => {
-//         setQuestions(data.data || []);
-//         setCurrentIndex(0);
-//       });
-//   }, [section]);
+  //   useEffect(() => {
+  //     fetch(`/api/${section.toLowerCase()}`)
+  //       .then(res => res.json())
+  //       .then(data => {
+  //         setQuestions(data.data || []);
+  //         setCurrentIndex(0);
+  //       });
+  //   }, [section]);
 
   useEffect(() => {
-  async function loadQuestions() {
-    try {
-      const cached = localStorage.getItem(section);
+    async function loadQuestions() {
+      try {
+        const cached = localStorage.getItem(section);
 
-      let questionsData = [];
+        let questionsData = [];
 
-      if (cached) {
-        questionsData = JSON.parse(cached);
-      } else {
-        const res = await fetch(`/api/${section.toLowerCase()}`);
-        const data = await res.json();
-        questionsData = data.data || [];
-        localStorage.setItem(section, JSON.stringify(questionsData));
+        if (cached) {
+          questionsData = JSON.parse(cached);
+        } else {
+          const res = await fetch(`/api/${section.toLowerCase()}`);
+          const data = await res.json();
+          questionsData = data.data || [];
+          localStorage.setItem(section, JSON.stringify(questionsData));
+        }
+
+        // const shuffled = shuffleArray(questionsData)
+        //   .map(shuffleQuestion)
+        //   .filter(Boolean)
+        //   .slice(0, 10);
+
+        const finalQuestions = questionsData.slice(0, 20);
+
+        setQuestions(finalQuestions);
+        setCurrentIndex(0);
+      } catch (err) {
+
       }
-
-      // const shuffled = shuffleArray(questionsData)
-      //   .map(shuffleQuestion)
-      //   .filter(Boolean)
-      //   .slice(0, 10);
-
-      const finalQuestions = questionsData.slice(0, 20); 
-
-      setQuestions(finalQuestions);
-      setCurrentIndex(0);
-    } catch (err) {
-
     }
-  }
 
-  loadQuestions();
-}, [section]);
+    loadQuestions();
+  }, [section]);
 
   // persist timer
   useEffect(() => {
     localStorage.setItem("exam-time", time);
   }, [time]);
 
-   useEffect(() => {
-  const disableRefresh = (e) => {
-    // F5
-    if (e.key === "F5") {
-      e.preventDefault();
-    }
+  useEffect(() => {
+    const disableRefresh = (e) => {
+      // F5
+      if (e.key === "F5") {
+        e.preventDefault();
+      }
 
-    // Ctrl+R / Ctrl+Shift+R / Cmd+R
-    if (
-      (e.ctrlKey && e.key.toLowerCase() === "r") ||
-      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "r") ||
-      (e.metaKey && e.key.toLowerCase() === "r")
-    ) {
-      e.preventDefault();
-    }
-  };
+      // Ctrl+R / Ctrl+Shift+R / Cmd+R
+      if (
+        (e.ctrlKey && e.key.toLowerCase() === "r") ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "r") ||
+        (e.metaKey && e.key.toLowerCase() === "r")
+      ) {
+        e.preventDefault();
+      }
+    };
 
-  window.addEventListener("keydown", disableRefresh);
+    window.addEventListener("keydown", disableRefresh);
 
-  return () => {
-    window.removeEventListener("keydown", disableRefresh);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("keydown", disableRefresh);
+    };
+  }, []);
 
-useEffect(() => {
-  const disableRefresh = (e) => {
-    // F5
-    if (e.key === "F5") {
-      e.preventDefault();
-    }
+  useEffect(() => {
+    const disableRefresh = (e) => {
+      // F5
+      if (e.key === "F5") {
+        e.preventDefault();
+      }
 
-    // Ctrl+R / Ctrl+Shift+R / Cmd+R
-    if (
-      (e.ctrlKey && e.key.toLowerCase() === "r") ||
-      (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "r") ||
-      (e.metaKey && e.key.toLowerCase() === "r")
-    ) {
-      e.preventDefault();
-    }
-  };
+      // Ctrl+R / Ctrl+Shift+R / Cmd+R
+      if (
+        (e.ctrlKey && e.key.toLowerCase() === "r") ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "r") ||
+        (e.metaKey && e.key.toLowerCase() === "r")
+      ) {
+        e.preventDefault();
+      }
+    };
 
-  window.addEventListener("keydown", disableRefresh);
+    window.addEventListener("keydown", disableRefresh);
 
-  return () => {
-    window.removeEventListener("keydown", disableRefresh);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("keydown", disableRefresh);
+    };
+  }, []);
 
   return (
-       <div >
-    <ExamContext.Provider
-      value={{
-        response,
-        setResponse,
-        section,
-        setSection,
-        questions,
-        setQuestions,
-        currentIndex,
-        setCurrentIndex,
-        answers,
-        setAnswers,
-        time,
-        setTime,
-      }}
-    >
-      {children}
-    </ExamContext.Provider>
-        </div>
+    <div >
+      <ExamContext.Provider
+        value={{
+          response,
+          setResponse,
+          section,
+          setSection,
+          questions,
+          setQuestions,
+          currentIndex,
+          setCurrentIndex,
+          answers,
+          setAnswers,
+          time,
+          setTime,
+        }}
+      >
+        {children}
+      </ExamContext.Provider>
+    </div>
   );
 }
 
