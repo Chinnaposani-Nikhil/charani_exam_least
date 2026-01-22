@@ -141,7 +141,7 @@ export default function ExamPage() {
                         <div>
                             <div className="flex items-center gap-4 mb-5">
                                 <img src="/charani-logo.jpeg" alt="Logo" className="w-16 h-16 rounded-full border-2 border-white object-cover" />
-                                <h1 className="text-2xl font-bold tracking-tight">Charani Infotech</h1>
+                                <h5 className="text-2xl font-bold tracking-tight  ">Charani Infotech Pvt. Ltd.</h5>
                             </div>
                             <h2 className="text-4xl font-bold mb-6 leading-tight">Feature Ready <br /> Assessments</h2>
                             <ul className="space-y-4 mb-5">
@@ -170,7 +170,7 @@ export default function ExamPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Name */}
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-bold text-blue-900 flex items-center gap-2"><User className="w-4 h-4" /> Name <span className='text-red-600'>*</span></label>
+                                    <label className="text-sm font-bold text-blue-900 flex items-center gap-2"><User className="w-4 h-4" /> Full Name <span className='text-red-600'>*</span></label>
                                     <input id="name" name="name" type="text" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.name} placeholder='Enter your full name' autoFocus
                                         className={`p-2 border rounded-lg outline-none transition-all ${formik.touched.name && formik.errors.name ? 'border-red-500' : 'border-gray-300 focus:border-blue-900'}`} />
                                     {formik.touched.name && formik.errors.name && <div className='text-red-600 text-xs'>{formik.errors.name}</div>}
@@ -253,6 +253,7 @@ export default function ExamPage() {
                                     <select name="branch" onChange={formik.handleChange} value={formik.values.branch} className="p-2 border border-gray-300 rounded-lg outline-none">
                                         <option>select Branch</option>
                                         <option value="aiml">AI/ML</option><option value="cse">CSE</option><option value="civil">CIVIL</option><option value="ece">ECE</option><option value="mech">Mech</option><option value="eee">EEE</option><option value="it">IT</option>
+                                        <option value="iot">IOT</option> <option value="it">Data Science </option>
                                     </select>
                                     {formik.touched.branch && formik.errors.branch && <div className='text-red-600 text-xs'>{formik.errors.branch}</div>}
                                 </div>
@@ -271,7 +272,7 @@ export default function ExamPage() {
                                 {/* Backlogs */}
                                 <div className="flex flex-col gap-1">
                                     <label className="text-sm font-bold text-blue-900 flex items-center gap-2"><History className="w-4 h-4" /> Backlogs <span className='text-red-600'>*</span></label>
-                                    <input id="backLogs" name="backLogs" type="number" onChange={formik.handleChange} value={formik.values.backLogs}
+                                    <input id="backLogs" min={0} max={10} name="backLogs" type="number" onChange={formik.handleChange} value={formik.values.backLogs}
                                         className="p-2 border border-gray-300 rounded-lg focus:border-blue-900 outline-none" />
                                     {formik.touched.backLogs && formik.errors.backLogs && <div className='text-red-600 text-xs'>{formik.errors.backLogs}</div>}
                                 </div>

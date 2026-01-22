@@ -46,9 +46,14 @@ useEffect(() => {
       </div>
     </ExamProvider>
           <div className="flex p-2 gap-2 mt-5 text-big  justify-center">
-  <span>&copy;</span> 
-  Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved.
+  {/* <span>&copy;</span> 
+  Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved. */}
+  
 </div>
+{/* Footer at bottom */}
+      <footer className="mt-auto py-4 bg-gray-800 text-white text-center text-sm">
+        © Copyright 2025 Charani Infotech Pvt Ltd. All Rights Reserved.
+      </footer>
     </ExamLayout>
   );
 }
