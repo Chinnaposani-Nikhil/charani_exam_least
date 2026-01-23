@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import DataTable from "react-data-table-component";
 import Header from "@/components/Header";
-import { View, X, NotepadText, UserCheck, MessagesSquare, Download, ListOrdered } from "lucide-react";
+import { View, X, NotepadText, UserCheck, MessagesSquare, Download, ListOrdered, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 
@@ -15,6 +15,12 @@ function HrPortal_Exam() {
   const [correctAnswersSearch, setCorrectAnswersSearch] = useState("");
   const [response, setResponse] = useState(null);
   const router = useRouter();
+
+  // College Multi-select States
+  const [collegeList, setCollegeList] = useState([]);
+  const [selectedColleges, setSelectedColleges] = useState([]);
+  const [tempColleges, setTempColleges] = useState([]);
+  const [showCollegeDropdown, setShowCollegeDropdown] = useState(false);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +67,22 @@ function HrPortal_Exam() {
 
   useEffect(() => {
     fetchStudents();
+  }, []);
+
+  // Fetch College List
+  useEffect(() => {
+    const fetchColleges = async () => {
+      try {
+        const res = await fetch("/api/add-colleges");
+        const data = await res.json();
+        if (data.success) {
+          setCollegeList(data.data); // each item: { collegeName, status }
+        }
+      } catch (error) {
+        console.error("Error fetching colleges:", error);
+      }
+    };
+    fetchColleges();
   }, []);
 
   // 3. Modal Logic
@@ -145,8 +167,9 @@ function HrPortal_Exam() {
         ? student.studentId?.toLowerCase().includes(studentIdSearch.toLowerCase())
         : true;
 
-      const matchCollegeName = collegeNameSearch
-        ? student.collegeName?.toLowerCase().includes(collegeNameSearch.toLowerCase())
+      // Filter by multi-selected colleges
+      const matchCollegeName = selectedColleges.length > 0
+        ? selectedColleges.includes(student.collegeName)
         : true;
 
       const matchCorrectAnswers = correctAnswersSearch
@@ -165,7 +188,7 @@ function HrPortal_Exam() {
   }, [
     studentData,
     studentIdSearch,
-    collegeNameSearch,
+    selectedColleges,
     correctAnswersSearch,
     selectSearch,
   ]);
@@ -199,15 +222,54 @@ function HrPortal_Exam() {
 
       {/* Filters Row */}
       <div className="flex gap-4 mb-6 flex-wrap items-end">
-        <div>
+        
+        {/* Updated College Dropdown Filter */}
+        <div className="relative">
           <label className="block text-sm font-bold mb-1">College Name</label>
-          <input
-            type="text"
-            placeholder="Search College..."
-            value={collegeNameSearch}
-            onChange={(e) => setCollegeNameSearch(e.target.value)}
-            className="border px-3 py-2 rounded w-64 outline-none focus:ring-2 focus:ring-blue-400"
-          />
+          <button
+            onClick={() => setShowCollegeDropdown(!showCollegeDropdown)}
+            className="border px-3 py-2 rounded w-64 bg-white flex justify-between items-center outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <span className="truncate">
+              {selectedColleges.length > 0 ? selectedColleges.join(", ") : "Select Colleges..."}
+            </span>
+            <ChevronDown size={18} className="text-gray-500" />
+          </button>
+
+          {showCollegeDropdown && (
+            <div className="absolute z-10 bg-white border rounded shadow-md p-3 w-64 mt-1 max-h-60 overflow-auto">
+              {collegeList.map((collegeObj) => {
+                const name = collegeObj.collegeName; 
+                return (
+                  <label key={name} className="flex items-center gap-2 mb-2 hover:bg-gray-50 cursor-pointer p-1 rounded">
+                    <input
+                      type="checkbox"
+                      checked={tempColleges.includes(name)}
+                      onChange={(e) =>
+                        setTempColleges((prev) =>
+                          e.target.checked
+                            ? [...prev, name]
+                            : prev.filter((c) => c !== name)
+                        )
+                      }
+                      className="accent-blue-600"
+                    />
+                    <span className="text-sm">{name}</span>
+                  </label>
+                );
+              })}
+
+              <button
+                onClick={() => {
+                  setSelectedColleges(tempColleges);
+                  setShowCollegeDropdown(false);
+                }}
+                className="mt-2 w-full bg-blue-600 text-white py-1.5 rounded text-sm font-bold hover:bg-blue-700 transition"
+              >
+                Select
+              </button>
+            </div>
+          )}
         </div>
 
         <div>
@@ -279,8 +341,7 @@ function HrPortal_Exam() {
                     className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200"
                   />
                 </div>
-               
-               
+                
                 <div>
                   <label className="font-bold flex items-center gap-2 mb-2 text-gray-700">
                     <MessagesSquare size={18} /> Feedback
@@ -291,7 +352,6 @@ function HrPortal_Exam() {
                     onChange={(e) => setFeedback(e.target.value)}
                     className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200"
                   ></textarea>
-                  
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -304,8 +364,6 @@ function HrPortal_Exam() {
                   <label className="font-bold text-gray-700 select-none">Shortlist for Next Round?</label>
                 </div>
               </div>
-
-              
 
               <div className="space-y-6">
                 <div>
@@ -330,27 +388,21 @@ function HrPortal_Exam() {
                   </select>
                 </div>
 
-                 <label className="font-bold flex items-center gap-2 mb-2 text-gray-700">
+                <div>
+                  <label className="font-bold flex items-center gap-2 mb-2 text-gray-700">
                     <ListOrdered size={18} /> Score
                   </label>
                   <select
                    value={score}
                     onChange={(e) => setScore(e.target.value)}
                    name="score" id="score" className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200">
-                    <option value="1">Select Score</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
+                    <option value="">Select Score</option>
+                    {[...Array(10)].map((_, i) => (
+                      <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    ))}
                   </select>
+                </div>
               </div>
-             
             </div>
 
             <div className="p-5 border-t bg-gray-50 flex justify-end gap-4">

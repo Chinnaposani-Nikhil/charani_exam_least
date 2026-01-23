@@ -121,7 +121,7 @@ function HrPortal_Exam() {
 
       <div className="flex gap-4 mb-6 flex-wrap bg-white p-5 rounded-lg shadow-sm items-end border border-gray-100">
         <div className="flex flex-col gap-1 relative">
-          <label className="text-xs font-bold text-gray-500 uppercase">College Name</label>
+          <label className="block text-sm font-bold mb-1">College Name</label>
           <button onClick={() => setShowCollegeDropdown(!showCollegeDropdown)} className="border px-3 py-2 rounded w-52 bg-white text-left">
             {selectedColleges.length > 0 ? selectedColleges.join(", ") : "Select College"}
           </button>
@@ -132,13 +132,13 @@ function HrPortal_Exam() {
                   <input type="checkbox" checked={tempColleges.includes(c)} onChange={(e) => setTempColleges(e.target.checked ? [...tempColleges, c] : tempColleges.filter(x => x !== c))} /> {c}
                 </label>
               ))}
-              <button onClick={() => { setSelectedColleges(tempColleges); setShowCollegeDropdown(false); }} className="mt-2 w-full bg-blue-600 text-white py-1 rounded">Apply</button>
+              <button onClick={() => { setSelectedColleges(tempColleges); setShowCollegeDropdown(false); }} className="mt-2 w-full bg-blue-600 text-white py-1 rounded">Select</button>
             </div>
           )}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase">Student ID</label>
+          <label className="block text-sm font-bold mb-1">Student ID</label>
           <input type="text" placeholder="Search..." value={studentIdSearch} onChange={e => setstudentIdSearch(e.target.value)} className="border px-3 py-2 rounded w-44 outline-none" />
         </div>
 

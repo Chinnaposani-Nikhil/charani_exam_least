@@ -356,6 +356,7 @@ function HrPortal_Exam() {
 
       <div className="flex gap-4 mb-6 flex-wrap bg-white p-5 rounded-lg shadow-sm items-end border border-gray-100">
         <div className="relative">
+          <label className="block text-sm font-bold mb-1">College Name</label>
           <button
             onClick={() => setShowCollegeDropdown(!showCollegeDropdown)}
             className="border px-4 py-2 rounded w-60 bg-white text-left text-sm"
@@ -391,14 +392,14 @@ function HrPortal_Exam() {
                 }}
                 className="mt-2 w-full bg-blue-600 text-white py-1 rounded text-sm font-bold"
               >
-                Apply Filter
+                Select
               </button>
             </div>
           )}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase">Student ID</label>
+          <label className="block text-sm font-bold mb-1">Student ID</label>
           <input
             type="text"
             placeholder="Search ID..."

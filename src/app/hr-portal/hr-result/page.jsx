@@ -241,9 +241,7 @@ function HrPortal_Exam() {
 
             {/* College Dropdown */}
           <div className="flex flex-col gap-1 relative">
-            <label className="text-xs font-bold text-gray-500 uppercase">
-              College Name
-            </label>
+            <label className="block text-sm font-bold mb-1">College Name</label>
 
             <button
               onClick={() => {
@@ -283,16 +281,14 @@ function HrPortal_Exam() {
                   }}
                   className="mt-2 w-full bg-blue-600 text-white py-1 rounded"
                 >
-                  Apply
+                  Select
                 </button>
               </div>
             )}
           </div>
           {/* Student ID Search */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">
-              Student ID
-            </label>
+           <label className="block text-sm font-bold mb-1">Student ID</label>
             <input
               type="text"
               value={studentIdSearch}
@@ -304,9 +300,7 @@ function HrPortal_Exam() {
 
           {/* Percentage Search */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold text-gray-500 uppercase">
-              Min Percentage
-            </label>
+            <label className="block text-sm font-bold mb-1">Min Percentage</label>
             <input
               type="number"
               value={percentageSearch}
