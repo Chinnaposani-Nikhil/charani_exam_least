@@ -36,8 +36,9 @@ export default function ResultPageContent() {
 
         setResult(studentResult);
       } catch (error) {
-
+       throw new Error("Failed to fetch result data");
       }
+      finally { localStorage.clear(); };
     };
 
     fetchResult();
@@ -47,34 +48,9 @@ export default function ResultPageContent() {
     return <div className="p-6 text-center">Loading your result...</div>;
   }
 
-  // const handleBack = () => {
-  //   localStorage.removeItem("StudentData"); // ✅ only remove what you need
-  //   router.replace("/registration");
-  // };
-   const handleBack = async () => {
-    // 1. Exit Fullscreen
-    if (document.fullscreenElement) {
-      try {
-        await document.exitFullscreen();
-      } catch (err) {
-        console.log("Error exiting fullscreen:", err);
-      }
-    }
-
-    // 2. Clear Local Storage
-    localStorage.clear();
-
-    // 3. Attempt to Close Tab or Redirect
-    // Note: window.close() only works if the window was opened by a script.
-    // If it fails, we redirect them to Google as a "Home" fallback.
-    try {
-        window.close();
-    } catch (e) {
-        console.log("Could not close window automatically");
-    }
-    
-    // Fallback if window.close() is blocked:
-    window.location.href = "https://www.google.com";
+  const handleBack = () => {
+    localStorage.removeItem("StudentData"); // ✅ only remove what you need
+    router.replace("/tech-exam");
   };
 
   return (
