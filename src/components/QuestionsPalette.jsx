@@ -205,7 +205,7 @@ export default function QuestionPalette() {
 
   const sectionAnswers = answers[section] || {};
 
-  const TIME_PER_QUESTION = 15;
+  const TIME_PER_QUESTION = 30;
 
   const [timeLeft, setTimeLeft] = useState(TIME_PER_QUESTION);
   const [timeExpiredQuestions, setTimeExpiredQuestions] = useState(new Set());
