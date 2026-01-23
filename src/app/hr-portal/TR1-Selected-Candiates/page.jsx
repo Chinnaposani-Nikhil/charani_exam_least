@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import DataTable from "react-data-table-component";
 import Header from "@/components/Header";
-import { View, X, NotepadText, UserCheck, MessagesSquare, Download } from "lucide-react";
+import { View, X, NotepadText, UserCheck, MessagesSquare, Download, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 
@@ -15,6 +15,12 @@ function HrPortal_Exam() {
   const [correctAnswersSearch, setCorrectAnswersSearch] = useState("");
   const [response, setResponse] = useState(null);
   const router = useRouter();
+
+  // New College Selection States
+  const [collegeList, setCollegeList] = useState([]);
+  const [selectedColleges, setSelectedColleges] = useState([]);
+  const [tempColleges, setTempColleges] = useState([]);
+  const [showCollegeDropdown, setShowCollegeDropdown] = useState(false);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +66,22 @@ function HrPortal_Exam() {
 
   useEffect(() => {
     fetchStudents();
+  }, []);
+
+  // New: Fetch Colleges
+  useEffect(() => {
+    const fetchColleges = async () => {
+      try {
+        const res = await fetch("/api/add-colleges");
+        const data = await res.json();
+        if (data.success) {
+          setCollegeList(data.data); // each item: { collegeName, status }
+        }
+      } catch (error) {
+        console.error("Error fetching colleges:", error);
+      }
+    };
+    fetchColleges();
   }, []);
 
   // 3. Modal Logic
@@ -143,8 +165,9 @@ function HrPortal_Exam() {
         ? student.studentId?.toLowerCase().includes(studentIdSearch.toLowerCase())
         : true;
 
-      const matchCollegeName = collegeNameSearch
-        ? student.collegeName?.toLowerCase().includes(collegeNameSearch.toLowerCase())
+      // Updated college filter logic to handle multi-select dropdown
+      const matchCollegeName = selectedColleges.length > 0
+        ? selectedColleges.includes(student.collegeName)
         : true;
 
       const matchCorrectAnswers = correctAnswersSearch
@@ -163,7 +186,7 @@ function HrPortal_Exam() {
   }, [
     studentData,
     studentIdSearch,
-    collegeNameSearch,
+    selectedColleges,
     correctAnswersSearch,
     selectSearch,
   ]);
@@ -179,7 +202,7 @@ function HrPortal_Exam() {
     { name: "Topic", selector: (row) => row.topic, sortable: true },
     { name: "Score", selector: (row) => row.score, sortable: true },
     { name: "Feedback", selector: (row) => row.feedback, sortable: true },
-     {
+    {
       name: "View Details",
       cell: (row) => (
         <button
@@ -197,9 +220,53 @@ function HrPortal_Exam() {
     <div className="p-6 min-h-screen bg-gray-50">
       <h1 className="text-2xl font-bold mb-4">Eligible Candidates for Technical-Exam</h1>
 
-     
       <div className="flex gap-4 mb-6 flex-wrap items-end">
-      
+        {/* College Multi-Select Dropdown */}
+        <div className="relative">
+          <label className="block text-sm font-bold mb-1">College Name</label>
+          <button
+            onClick={() => setShowCollegeDropdown(!showCollegeDropdown)}
+            className="border px-3 py-2 rounded w-64 bg-white text-left flex justify-between items-center outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <span className="truncate">
+              {selectedColleges.length > 0 ? selectedColleges.join(", ") : "Select College"}
+            </span>
+            <ChevronDown size={18} />
+          </button>
+
+          {showCollegeDropdown && (
+            <div className="absolute z-10 bg-white border rounded shadow-md p-3 w-64 mt-1 max-h-60 overflow-auto">
+              {collegeList.map((collegeObj) => {
+                const name = collegeObj.collegeName; 
+                return (
+                  <label key={name} className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-gray-50">
+                    <input
+                      type="checkbox"
+                      checked={tempColleges.includes(name)}
+                      onChange={(e) =>
+                        setTempColleges((prev) =>
+                          e.target.checked
+                            ? [...prev, name]
+                            : prev.filter((c) => c !== name)
+                        )
+                      }
+                    />
+                    {name}
+                  </label>
+                );
+              })}
+              <button
+                onClick={() => {
+                  setSelectedColleges(tempColleges);
+                  setShowCollegeDropdown(false);
+                }}
+                className="mt-2 w-full bg-blue-600 text-white py-1 rounded font-bold hover:bg-blue-700 transition"
+              >
+                Apply
+              </button>
+            </div>
+          )}
+        </div>
 
         <div>
           <label className="block text-sm font-bold mb-1">Student ID</label>
@@ -244,44 +311,42 @@ function HrPortal_Exam() {
           responsive
         />
       </div>
+
       {isModalOpen && selectedStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-auto flex flex-col">
-            
             <div className="flex justify-between items-center p-5 border-b bg-gray-50">
               <h2 className="text-xl font-bold text-blue-900">Details - {selectedStudent.studentName}</h2>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full">
                 <X size={24} />
               </button>
             </div>
-             <div className="p-6 space-y-4 font-bold align-item-center">
-                <div className="w-full flex ">
-               <p className="w-1/2">Student Id </p> <span className="font-normal w-1/2"> :    {selectedStudent.studentId}</span>
-                </div>
-
-                                <div className="w-full flex ">
-               <p className="w-1/2">Name</p> <span className="font-normal w-1/2">:  {selectedStudent.studentName}</span>
-                </div>
- 
-                 <div className="w-full flex ">
-               <p className="w-1/2">Email</p> <span className="font-normal w-1/2">:  {selectedStudent.studentEmail}</span>
-                </div>
-                <div className="w-full flex ">
+            <div className="p-6 space-y-4 font-bold align-item-center">
+              <div className="w-full flex">
+                <p className="w-1/2">Student Id </p> <span className="font-normal w-1/2"> :    {selectedStudent.studentId}</span>
+              </div>
+              <div className="w-full flex">
+                <p className="w-1/2">Name</p> <span className="font-normal w-1/2">:  {selectedStudent.studentName}</span>
+              </div>
+              <div className="w-full flex">
+                <p className="w-1/2">Email</p> <span className="font-normal w-1/2">:  {selectedStudent.studentEmail}</span>
+              </div>
+              <div className="w-full flex">
                 <p className="w-1/2">Phone </p> <span className="font-normal w-1/2">:  {selectedStudent.phone}</span>
-                </div>
-                <div className="w-full flex ">
+              </div>
+              <div className="w-full flex">
                 <p className="w-1/2">College Name </p> <span className="font-normal w-1/2"> :  {selectedStudent.collegeName}</span>
-                </div>
-                <div className="w-full flex ">
+              </div>
+              <div className="w-full flex">
                 <p className="w-1/2">Topic </p> <span className="font-normal w-1/2">:  {selectedStudent.topic}</span>
-                </div>
-                <div className="w-full flex ">
+              </div>
+              <div className="w-full flex">
                 <p className="w-1/2">Score </p> <span className="font-normal w-1/2"> :  {selectedStudent.score}</span>
-                </div>
-                <div className="w-full flex ">
+              </div>
+              <div className="w-full flex">
                 <p className="w-1/2">Feedback </p> <span className="font-normal w-1/2"> :  {selectedStudent.feedback}</span>
-                </div   >
-             </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
