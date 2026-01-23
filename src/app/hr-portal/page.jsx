@@ -34,32 +34,36 @@ function HrPortal_Exam() {
 
   // 2. Fetch Students
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const res = await fetch("/api/result");
-        const data = await res.json();
+  const fetchStudents = async () => {
+    try {
+      const res = await fetch("/api/result");
+      const data = await res.json();
 
-        if (data.success) {
-          const flattened = Object.entries(data.data || {}).flatMap(
-            ([studentId, collegeObj]) =>
-              Object.entries(collegeObj).map(([resultId, value]) => ({
-                id: resultId,
-                studentId,
-                ...value,
-              }))
-          );
-          setStudentData(data.data);
-        }
-      } catch (error) {
-        setResponse(
-          <div className="flex justify-center text-red-800 font-bold mt-6">
-            Error fetching users
-          </div>
+      if (data.success) {
+        const flattened = Object.entries(data.data || {}).flatMap(
+          ([studentId, collegeObj]) =>
+            Object.entries(collegeObj).map(([resultId, value]) => ({
+              id: resultId,        // ✅ UNIQUE ID
+              studentId,
+              ...value,
+            }))
         );
+
+        setStudentData(data.data); // ✅ ONLY REQUIRED FIX
       }
-    };
-    fetchStudents();
-  }, []);
+    } catch (error) {
+
+      setResponse(
+        <div className="flex justify-center text-red-800 font-bold mt-6">
+          Error fetching users
+        </div>
+      );
+    }
+  };
+
+  fetchStudents();
+}, []);
+
 
   // 3. Fetch College List from API
   useEffect(() => {
@@ -90,6 +94,7 @@ function HrPortal_Exam() {
       const payload = {
         studentName: student.studentName,
         studentEmail: student.studentEmail,
+        phone: student.phone,
         studentId: student.studentId,
         collegeName: student.collegeName,
         totalQuestions: student.totalQuestions,
@@ -97,7 +102,6 @@ function HrPortal_Exam() {
         submittedAt: student.submittedAt,
         feedback: "",
         topic: "",
-        score: student.correctAnswers,
         selectorName: "HR_Admin",
         Aptitude_select: true,
       };
@@ -119,7 +123,7 @@ function HrPortal_Exam() {
     setResponse(
       !hasError ? (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-50 bg-green-100 border-2 border-green-600 text-green-800 px-6 py-2 rounded shadow-lg font-bold">
-          Shortlisted for Next Round 
+          Seleceted students have been shortlisted for next round.
         </div>
       ) : (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-50 bg-red-100 border-2 border-red-600 text-red-800 px-6 py-2 rounded shadow-lg font-bold">
@@ -139,6 +143,10 @@ function HrPortal_Exam() {
     );
   };
 
+    const handleSelectAll = (e) => {
+    if (e.target.checked) setSelectedRows(filteredData);
+    else setSelectedRows([]);
+  };
   // 5. Filtering Logic
   const filteredData = useMemo(() => {
     return studentData.filter((student) => {
@@ -225,22 +233,22 @@ function HrPortal_Exam() {
       sortable: true,
       width: "250px",
     },
-    { name: "Total Questions", selector: (row) => row.totalQuestions },
-    { name: "Correct Answers", selector: (row) => row.correctAnswers },
-    { name: "percentage", selector: (row) => row.percentage },
-    { name: "Submitted At", selector: (row) => row.submittedAt },
-    {
-      name: "Selection",
-      width: "100px",
-      cell: (row) => (
-        <input
-          type="checkbox"
-          className="w-5 h-5 cursor-pointer"
-          checked={!!selectedRows.find((s) => s.id === row.id)}
-          onChange={() => handleCheckboxChange(row)}
-        />
-      ),
-    },
+    { name: "Total Questions", selector: (row) => row.totalQuestions, sortable: true  },
+    { name: "Correct Answers", selector: (row) => row.correctAnswers, sortable: true  },
+    { name: "percentage", selector: (row) => row.percentage, sortable: true  },
+    { name: "Submitted At", selector: (row) => row.submittedAt , sortable: true },
+    // {
+    //   name: "Selection",
+    //   width: "100px",
+    //   cell: (row) => (
+    //     <input
+    //       type="checkbox"
+    //       className="w-5 h-5 cursor-pointer"
+    //       checked={!!selectedRows.find((s) => s.id === row.id)}
+    //       onChange={() => handleCheckboxChange(row)}
+    //     />
+    //   ),
+    // },
   ];
 
   return (
@@ -259,7 +267,7 @@ function HrPortal_Exam() {
           >
             {selectedRows.length === filteredData.length
               ? "Deselect All"
-              : "Select All"} ({selectedRows.length})
+              : "Select All"}({selectedRows.length})
           </button>
 
           <button
@@ -275,6 +283,7 @@ function HrPortal_Exam() {
       <div className="flex gap-4 mb-4 flex-wrap bg-white p-4 rounded shadow-sm items-center">
         {/* College Dropdown */}
         <div className="relative">
+          <label className="block text-sm font-bold mb-1">College Name</label>
           <button
             onClick={() => {
               setTempColleges(selectedColleges);
@@ -323,6 +332,8 @@ function HrPortal_Exam() {
         </div>
 
         {/* Other Filters */}
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Student Id</label>
         <input
           type="text"
           placeholder="Search By Student ID"
@@ -330,6 +341,9 @@ function HrPortal_Exam() {
           onChange={(e) => setstudentIdSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
+        </div>
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Correct Answers</label>
         <input
           type="number"
           placeholder="Min Correct Answers"
@@ -337,6 +351,9 @@ function HrPortal_Exam() {
           onChange={(e) => setCorrectAnswersSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
+        </div>
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Min Percentage</label>
         <input
           type="text"
           placeholder="Min Percentage"
@@ -344,7 +361,7 @@ function HrPortal_Exam() {
           onChange={(e) => setPercentageSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
-
+        </div>
         <button
           onClick={handleBulkSelect}
           className="bg-green-600 text-white px-6 py-2 rounded font-bold flex items-center gap-2"

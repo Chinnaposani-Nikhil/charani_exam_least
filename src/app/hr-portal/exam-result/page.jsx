@@ -283,6 +283,7 @@ function HrPortal_Exam() {
       <div className="flex gap-4 mb-4 flex-wrap bg-white p-4 rounded shadow-sm items-center">
         {/* College Dropdown */}
         <div className="relative">
+          <label className="block text-sm font-bold mb-1">College Name</label>
           <button
             onClick={() => {
               setTempColleges(selectedColleges);
@@ -331,6 +332,8 @@ function HrPortal_Exam() {
         </div>
 
         {/* Other Filters */}
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Student Id</label>
         <input
           type="text"
           placeholder="Search By Student ID"
@@ -338,6 +341,9 @@ function HrPortal_Exam() {
           onChange={(e) => setstudentIdSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
+        </div>
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Correct Answers</label>
         <input
           type="number"
           placeholder="Min Correct Answers"
@@ -345,6 +351,9 @@ function HrPortal_Exam() {
           onChange={(e) => setCorrectAnswersSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
+        </div>
+        <div className="flex flex-col gap-1">
+        <label className="block text-sm font-bold mb-1">Min Percentage</label>
         <input
           type="text"
           placeholder="Min Percentage"
@@ -352,7 +361,7 @@ function HrPortal_Exam() {
           onChange={(e) => setPercentageSearch(e.target.value)}
           className="border px-3 py-2 rounded w-60"
         />
-
+        </div>
         <button
           onClick={handleBulkSelect}
           className="bg-green-600 text-white px-6 py-2 rounded font-bold flex items-center gap-2"

@@ -229,6 +229,7 @@ function HrPortal_Exam() {
       <div className="flex gap-4 mb-6 flex-wrap items-end bg-white p-5 rounded-lg shadow-sm">
         {/* College Dropdown */}
         <div className="relative">
+          <label className="block text-sm font-bold mb-1">College Name</label>
           <button
             onClick={() => {
               setTempColleges(selectedColleges);
@@ -272,7 +273,7 @@ function HrPortal_Exam() {
 
         {/* Student ID */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase">Student ID</label>
+          <label className="block text-sm font-bold mb-1">Student ID</label>
           <input
             type="text"
             placeholder="Search ID..."
@@ -284,7 +285,7 @@ function HrPortal_Exam() {
 
         {/* Min Score */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-gray-500 uppercase">Correct Answers</label>
+          <label className="block text-sm font-bold mb-1">Correct Answers</label>
           <input
             type="number"
             value={correctAnswersSearch}

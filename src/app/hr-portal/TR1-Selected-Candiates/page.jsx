@@ -262,7 +262,7 @@ function HrPortal_Exam() {
                 }}
                 className="mt-2 w-full bg-blue-600 text-white py-1 rounded font-bold hover:bg-blue-700 transition"
               >
-                Apply
+                Select
               </button>
             </div>
           )}
