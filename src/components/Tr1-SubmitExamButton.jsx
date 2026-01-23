@@ -8,7 +8,7 @@ export default function SubmitExamButton() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (!confirm("Are you sure you want to submit the exam?")) return;
+ 
     const StudentData = JSON.parse(localStorage.getItem("StudentData")) || {};
     // 🔹 Student details from localStorage or form
     const studentName = StudentData.studentName || "Unknown";
