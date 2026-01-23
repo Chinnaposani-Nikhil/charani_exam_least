@@ -195,7 +195,7 @@ function HrPortal_Exam() {
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
-      <h1 className="text-2xl font-bold mb-4">Selected for Jam</h1>
+      <h1 className="text-2xl font-bold mb-4">Eligible Candidates for Technical-Exam</h1>
 
      
       <div className="flex gap-4 mb-6 flex-wrap items-end">
