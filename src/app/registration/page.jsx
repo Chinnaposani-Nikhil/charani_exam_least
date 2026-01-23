@@ -253,10 +253,10 @@ export default function ExamPage() {
                                     <select name="branch" onChange={formik.handleChange} value={formik.values.branch} className="p-2 border border-gray-300 rounded-lg outline-none">
                                         <option>select Branch</option>
                                         <option value="aiml">AI/ML</option><option value="cse">CSE</option><option value="civil">CIVIL</option><option value="ece">ECE</option><option value="mech">Mech</option><option value="eee">EEE</option><option value="it">IT</option>
-                                        <option value="iot">IOT</option> <option value="it">Data Science </option>
+                                        <option value="iot">IOT</option> <option value="it">Data Science </option> <option value="others">Others </option>
                                     </select>
                                     {formik.touched.branch && formik.errors.branch && <div className='text-red-600 text-xs'>{formik.errors.branch}</div>}
-                                </div>
+                                </div> 
                                 {/* Year */}
                                 <div className="flex flex-col gap-1">
                                     <label className="text-sm font-bold text-blue-900 flex items-center gap-2"><Calendar className="w-4 h-4" /> Year <span className='text-red-600'>*</span></label>

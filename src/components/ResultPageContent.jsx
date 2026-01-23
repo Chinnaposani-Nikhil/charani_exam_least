@@ -67,9 +67,34 @@ export default function ResultPageContent() {
     );
   }
 
-  const handleBack = () => {
+  // const handleBack = () => {
+  //   localStorage.clear();
+  //   router.replace("/registration");
+  // };
+  const handleBack = async () => {
+    // 1. Exit Fullscreen
+    if (document.fullscreenElement) {
+      try {
+        await document.exitFullscreen();
+      } catch (err) {
+        console.log("Error exiting fullscreen:", err);
+      }
+    }
+
+    // 2. Clear Local Storage
     localStorage.clear();
-    router.replace("/registration");
+
+    // 3. Attempt to Close Tab or Redirect
+    // Note: window.close() only works if the window was opened by a script.
+    // If it fails, we redirect them to Google as a "Home" fallback.
+    try {
+        window.close();
+    } catch (e) {
+        console.log("Could not close window automatically");
+    }
+    
+    // Fallback if window.close() is blocked:
+    window.location.href = "https://www.google.com";
   };
 
   return (
@@ -84,9 +109,9 @@ export default function ResultPageContent() {
           <div className="space-y-3 mb-8">
             <h3 className="font-semibold text-lg">
               Hi,<span className="font-normal text-blue-900 text-2xl font-bold "> <b>{result.studentName}</b></span>
-              <p> Your test is successfully completed <br />
+              <div> Your test is successfully completed <br />
                 <h2 className="text-green-900 text-2xl font-bold mt-6">Thank You</h2>
-              </p>
+              </div>
             </h3>
             {/* </p>
             <p className="font-semibold text-lg">
