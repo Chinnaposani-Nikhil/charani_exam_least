@@ -107,7 +107,28 @@ function HrPortal_Exam() {
         jam_selected: isSelected,
       };
 
-      const res = await fetch("/api/tr1-Exam-Result", {
+      //     const res = await fetch("/api/tr1-Exam-Result", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify(payload),
+      //     });
+
+      //     const data = await res.json();
+      //     if (data.success) {
+      //       setResponse(
+      //         <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-2 rounded shadow-lg z-[60]">
+      //           Shortlisted for Technical Exam.
+      //         </div>
+      //       );
+      //       setIsModalOpen(false);
+      //       fetchStudents();
+      //       setTimeout(() => setResponse(null), 3000);
+      //     }
+      //   } catch (error) {
+      //     alert("Error updating result");
+      //   }
+      // };
+      const res = await fetch("/api/tr1-selected-candiates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -128,7 +149,6 @@ function HrPortal_Exam() {
       alert("Error updating result");
     }
   };
-
   // 4. Excel Download
   const handleDownloadExcel = () => {
     if (filteredData.length === 0) {
@@ -180,8 +200,8 @@ function HrPortal_Exam() {
         selectSearch === ""
           ? true
           : selectSearch === "yes"
-          ? student.Aptitude_select === true
-          : student.Aptitude_select === false;
+            ? student.Aptitude_select === true
+            : student.Aptitude_select === false;
 
       return matchStudentId && matchCollegeName && matchCorrectAnswers && matchSelect;
     });
@@ -222,7 +242,7 @@ function HrPortal_Exam() {
 
       {/* Filters Row */}
       <div className="flex gap-4 mb-6 flex-wrap items-end">
-        
+
         {/* Updated College Dropdown Filter */}
         <div className="relative">
           <label className="block text-sm font-bold mb-1">College Name</label>
@@ -239,7 +259,7 @@ function HrPortal_Exam() {
           {showCollegeDropdown && (
             <div className="absolute z-10 bg-white border rounded shadow-md p-3 w-64 mt-1 max-h-60 overflow-auto">
               {collegeList.map((collegeObj) => {
-                const name = collegeObj.collegeName; 
+                const name = collegeObj.collegeName;
                 return (
                   <label key={name} className="flex items-center gap-2 mb-2 hover:bg-gray-50 cursor-pointer p-1 rounded">
                     <input
@@ -320,7 +340,7 @@ function HrPortal_Exam() {
       {isModalOpen && selectedStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-auto flex flex-col">
-            
+
             <div className="flex justify-between items-center p-5 border-b bg-gray-50">
               <h2 className="text-xl font-bold text-gray-800">Review Result - {selectedStudent.studentName}</h2>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full">
@@ -341,7 +361,7 @@ function HrPortal_Exam() {
                     className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200"
                   />
                 </div>
-                
+
                 <div>
                   <label className="font-bold flex items-center gap-2 mb-2 text-gray-700">
                     <MessagesSquare size={18} /> Feedback
@@ -393,9 +413,9 @@ function HrPortal_Exam() {
                     <ListOrdered size={18} /> Score
                   </label>
                   <select
-                   value={score}
+                    value={score}
                     onChange={(e) => setScore(e.target.value)}
-                   name="score" id="score" className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200">
+                    name="score" id="score" className="border-2 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 outline-none border-gray-200">
                     <option value="">Select Score</option>
                     {[...Array(10)].map((_, i) => (
                       <option key={i + 1} value={i + 1}>{i + 1}</option>
