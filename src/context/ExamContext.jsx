@@ -18,7 +18,7 @@ export function ExamProvider({ children }) {
   });
 
   // ⏱ timer (persist)
-  const [time, setTime] = useState(60 * 1); // default 1 hour
+  const [time, setTime] = useState(1802); // default 30 minutes
 
   // 🔹 Load persisted time only on client
   useEffect(() => {

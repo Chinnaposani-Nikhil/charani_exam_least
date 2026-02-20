@@ -46,7 +46,7 @@ const SECTIONS = [
   { key: "Communication", label: "Communication", icon: MessageSquare },
 ];
 
-const SECTION_TIME = 20*1; // 900 seconds = 15 minutes
+const SECTION_TIME = 20*30; // 600 seconds = 10 minutes
 
 export default function SectionTabs() {
   const { section, setSection } = useExam();
