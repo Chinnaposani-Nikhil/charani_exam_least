@@ -414,10 +414,160 @@
 // export default SecurityEnforcer;
 
 "use client";
+// import { useEffect } from "react";
+
+// const SecurityEnforcer = () => {
+//     useEffect(() => {
+
+//         // --- 1. DISABLE RIGHT CLICK ---
+//         const handleContextMenu = (e) => {
+//             e.preventDefault();
+//             e.stopPropagation();
+//             return false;
+//         };
+
+//         // --- 2. DISABLE BROWSER BACK BUTTON (History Trap) ---
+//         // This pushes the current state into history. If they click back,
+//         // it just loads the same state again, effectively disabling the button.
+//         const disableBackButton = () => {
+//             window.history.pushState(null, "", window.location.href);
+//             window.onpopstate = function () {
+//                 window.history.pushState(null, "", window.location.href);
+//             };
+//         };
+//         disableBackButton();
+
+//         // --- 3. KEYBOARD BLOCKING LOGIC ---
+//         const handleKeyDown = (e) => {
+//             // A. STRICTLY BLOCK CTRL KEY (Copy, Paste, Find, etc.)
+//             if (e.ctrlKey) {
+//                 e.preventDefault();
+//                 e.stopPropagation();
+//                 return false;
+//             }
+
+//             // B. BLOCK ALT + TAB (And all Alt combinations)
+//             if (e.altKey || e.key === "Tab") {
+//                 e.preventDefault();
+//                 e.stopPropagation();
+//                 return false;
+//             }
+
+//             // C. BLOCK WINDOWS KEY (Meta) + TAB / D
+//             if (e.metaKey || e.key === "Meta" || e.key === "OS") {
+//                 e.preventDefault();
+//                 e.stopPropagation();
+//                 return false;
+//             }
+
+//             // D. BLOCK FUNCTION KEYS (F1 - F12)
+//             if (e.key && e.key.startsWith("F") && !isNaN(e.key.slice(1))) {
+//                 e.preventDefault();
+//                 e.stopPropagation();
+//                 return false;
+//             }
+
+//             // E. BLOCK PRINT SCREEN
+//             if (e.key === "PrintScreen" || e.key === "prt sc" || e.key === "ScreenShot") {
+//                 e.preventDefault();
+//                 e.stopPropagation();
+//                 if (navigator.clipboard) {
+//                     navigator.clipboard.writeText(""); 
+//                 }
+//                 return false;
+//             }
+//         };
+
+//         // --- 4. SYSTEM KEY LOCK (Crucial for Alt+Tab / Win Keys) ---
+//         const lockSystemKeys = async () => {
+//             if ("keyboard" in navigator && "lock" in navigator.keyboard) {
+//                 try {
+//                     await navigator.keyboard.lock([
+//                         "Escape", "PrintScreen", 
+//                         "Tab", "AltLeft", "AltRight", 
+//                         "MetaLeft", "MetaRight", // Windows Keys
+//                         "ControlLeft", "ControlRight", // Lock Ctrl keys
+//                         "F1", "F5", "F11", "F12" 
+//                     ]);
+//                 } catch (err) {
+//                     console.log("Keyboard lock failed", err);
+//                 }
+//             }
+//         };
+
+//         // --- 5. AGGRESSIVE FULLSCREEN ENFORCEMENT ---
+//         const enforceFullScreen = () => {
+//             const doc = document.documentElement;
+//             if (!document.fullscreenElement) {
+//                 doc.requestFullscreen()
+//                     .then(() => {
+//                         lockSystemKeys();
+//                     })
+//                     .catch(() => {
+//                         // Silent fail if browser blocks it
+//                     });
+//             }
+//         };
+
+//         // --- 6. "DISABLE" X BUTTON LOGIC ---
+//         const handleFullscreenChange = () => {
+//             if (!document.fullscreenElement) {
+//                 enforceFullScreen();
+//             } else {
+//                 lockSystemKeys();
+//             }
+//         };
+
+//         // --- LISTENERS ---
+//         document.addEventListener("contextmenu", handleContextMenu, true);
+//         document.addEventListener("keydown", handleKeyDown, true);
+//         document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+//         // RE-ENFORCE ON EVERY INTERACTION
+//         window.addEventListener("click", enforceFullScreen);
+//         window.addEventListener("mouseup", enforceFullScreen);
+//         window.addEventListener("focus", () => {
+//             enforceFullScreen();
+//             lockSystemKeys();
+//         });
+        
+//         window.addEventListener("blur", () => {
+//             setTimeout(enforceFullScreen, 50);
+//         });
+
+//         // Initial Start
+//         lockSystemKeys(); 
+//         disableBackButton(); // Ensure history is pushed on mount
+
+//         return () => {
+//             document.removeEventListener("contextmenu", handleContextMenu, true);
+//             document.removeEventListener("keydown", handleKeyDown, true);
+//             document.removeEventListener("fullscreenchange", handleFullscreenChange);
+//             window.removeEventListener("click", enforceFullScreen);
+//             window.removeEventListener("mouseup", enforceFullScreen);
+//             window.removeEventListener("focus", enforceFullScreen);
+//             // Clean up back button logic (optional, but good practice)
+//             window.onpopstate = null;
+//         };
+//     }, []);
+
+//     return null;
+
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const SecurityEnforcer = () => {
+    const pathname = usePathname();
+
     useEffect(() => {
+        const isExamRoute = ["/exam", "/tech-exam", "/technical-round-1"].some(route => pathname?.startsWith(route));
+
+        if (!isExamRoute) {
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => { });
+            }
+            return;
+        }
 
         // --- 1. DISABLE RIGHT CLICK ---
         const handleContextMenu = (e) => {
@@ -472,7 +622,7 @@ const SecurityEnforcer = () => {
                 e.preventDefault();
                 e.stopPropagation();
                 if (navigator.clipboard) {
-                    navigator.clipboard.writeText(""); 
+                    navigator.clipboard.writeText("");
                 }
                 return false;
             }
@@ -483,11 +633,11 @@ const SecurityEnforcer = () => {
             if ("keyboard" in navigator && "lock" in navigator.keyboard) {
                 try {
                     await navigator.keyboard.lock([
-                        "Escape", "PrintScreen", 
-                        "Tab", "AltLeft", "AltRight", 
+                        "Escape", "PrintScreen",
+                        "Tab", "AltLeft", "AltRight",
                         "MetaLeft", "MetaRight", // Windows Keys
                         "ControlLeft", "ControlRight", // Lock Ctrl keys
-                        "F1", "F5", "F11", "F12" 
+                        "F1", "F5", "F11", "F12"
                     ]);
                 } catch (err) {
                     console.log("Keyboard lock failed", err);
@@ -530,13 +680,13 @@ const SecurityEnforcer = () => {
             enforceFullScreen();
             lockSystemKeys();
         });
-        
+
         window.addEventListener("blur", () => {
             setTimeout(enforceFullScreen, 50);
         });
 
         // Initial Start
-        lockSystemKeys(); 
+        lockSystemKeys();
         disableBackButton(); // Ensure history is pushed on mount
 
         return () => {
@@ -549,7 +699,7 @@ const SecurityEnforcer = () => {
             // Clean up back button logic (optional, but good practice)
             window.onpopstate = null;
         };
-    }, []);
+    }, [pathname]);
 
     return null;
 };
